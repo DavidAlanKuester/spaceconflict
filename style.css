@@ -1,0 +1,16 @@
+body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.canvas {
+    border: 8px solid rgba(255,255,255,0.4);
+    border-radius: 8px;
+}
+
+.title {
+    color: white;
+}
