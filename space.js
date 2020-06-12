@@ -12,17 +12,20 @@ let asteroidOffset_x = 0;
 let asteroidOffset_y = 0;
 let enemies = [];
 let shootingTime = 0;
+let shootingList = [];
 let shootingMissileTime = 0;
 let placedMissiles = [];
 let placedHealth = [];
+let placedHealth2 = [];
 let collectedMissiles = [0];
+let lastMissile_x = 0;
 
 let AUDIO_HEALTH = new Audio('audio/health.mp3');
 let AUDIO_MISSILELOAD = new Audio('audio/missile_load.mp3');
-let AUDIO_DAMAGE1= new Audio('audio/damage1.mp3');
-let AUDIO_DAMAGE2= new Audio('audio/damage2.mp3');
-let AUDIO_DAMAGE3= new Audio('audio/damage3.mp3');
-let AUDIO_MISSILESHOOT= new Audio('audio/missileshoot.mp3');
+let AUDIO_DAMAGE1 = new Audio('audio/damage1.mp3');
+let AUDIO_DAMAGE2 = new Audio('audio/damage2.mp3');
+let AUDIO_DAMAGE3 = new Audio('audio/damage3.mp3');
+let AUDIO_MISSILESHOOT = new Audio('audio/missileshoot.mp3');
 
 function init() {
     canvas = document.getElementById('canvas');
@@ -62,7 +65,7 @@ function checkForCollision() {
                     rocket_energy -= 20;
                     enemies.splice(i, 1);
                     AUDIO_DAMAGE3.play();
-                }  
+                }
             }
         }
 
@@ -71,8 +74,8 @@ function checkForCollision() {
             let missile = placedMissiles[i];
             if ((missile.x - 20) < rocket_x && (missile.x + 20) > rocket_x && (missile.y - 50) < rocket_y && (missile.y + 10) > rocket_y) {
                 placedMissiles.splice(i, 1);
-               AUDIO_MISSILELOAD.play();
-               collectedMissiles++;
+                AUDIO_MISSILELOAD.play();
+                collectedMissiles++;
             }
 
         }
@@ -82,6 +85,16 @@ function checkForCollision() {
             if ((health.x - 20) < rocket_x && (health.x + 20) > rocket_x && (health.y - 50) < rocket_y && (health.y + 10) > rocket_y) {
                 placedHealth.splice(i, 1);
                 rocket_energy = rocket_energy + 10;
+                AUDIO_HEALTH.play();
+            }
+        }
+
+        // Collecting Health2
+        for (i = 0; i < placedHealth2.length; i = i + 1) {
+            let health2 = placedHealth2[i];
+            if ((health2.x - 20) < rocket_x && (health2.x + 20) > rocket_x && (health2.y - 50) < rocket_y && (health2.y + 10) > rocket_y) {
+                placedHealth2.splice(i, 1);
+                rocket_energy = rocket_energy + 20;
                 AUDIO_HEALTH.play();
             }
         }
@@ -98,7 +111,7 @@ function spawnObjects() {
             placedMissiles.push(missile);
         }
     }, 30000);
-    
+
     setInterval(function () {
         if (placedHealth.length < 4) {
             let health = {
@@ -108,6 +121,16 @@ function spawnObjects() {
             placedHealth.push(health);
         }
     }, 20000);
+
+    setInterval(function () {
+        if (placedHealth2.length < 4) {
+            let health2 = {
+                x: 720 * Math.random(),
+                y: 300 + (100 * Math.random()),
+            };
+            placedHealth2.push(health2);
+        }
+    }, 40000);
 }
 
 function createEnemiesList() {
@@ -170,11 +193,15 @@ function drawItems() {
         let health = placedHealth[i];
         drawBackgroundObject('img/hp.png', health.x, health.y, 0.2);
     }
+    for (i = 0; i < placedHealth2.length; i = i + 1) {
+        let health2 = placedHealth2[i];
+        drawBackgroundObject('img/hp2.png', health2.x, health2.y, 0.2);
+    }
 }
 
 function drawShootMissile() {
     let timepassed = new Date().getTime() - shootingMissileTime;
-    shot_missile_x = rocket_x;
+    shot_missile_x = lastMissile_x + 13;
     shot_missile_y = rocket_y - (timepassed * 0.75);
     let base_image = new Image();
     base_image.src = 'img/shotrocket.png';
@@ -184,10 +211,14 @@ function drawShootMissile() {
 }
 
 function drawshooting() {
-    if (shootingTime) {
-        let timePassed = new Date().getTime() - shootingTime;
-        let shot_x = rocket_x + 16;
+    for (i = 0; i < shootingList.length; i = i + 1){
+        let currentShot = shootingList[i];
+        let timePassed = new Date().getTime() - currentShot.shootingTime;
+        let shot_x = currentShot.x + 16;
         let shot_y = rocket_y - (timePassed / 2);
+        if (shot_y < 0) {
+            shootingList.splice(i, 1);
+        }
 
         let base_image = new Image();
         base_image.src = 'img/shot.png';
@@ -303,36 +334,46 @@ function listenForKeys() {
         }
         if (k == 'ArrowLeft') {
             if (rocket_x > 5) {
-            rocket_x = rocket_x - 10;
-            rocketIsMovingLeft = true;
+                rocket_x = rocket_x - 10;
+                rocketIsMovingLeft = true;
             }
         }
         if (k == 'ArrowUp') {
             if (rocket_y > 300) {
-            rocket_y = rocket_y - 10;
-            rocketIsMovingUp = true;
+                rocket_y = rocket_y - 10;
+                rocketIsMovingUp = true;
             }
         }
         if (k == 'ArrowDown') {
             if (rocket_y < 400) {
-            rocket_y = rocket_y + 5;
-            rocketIsMovingDown = true;
+                rocket_y = rocket_y + 5;
+                rocketIsMovingDown = true;
             }
         }
-
-        if (k == 'd') {
+        if (e.code == 'Space') {
             let timePassed = new Date().getTime() - shootingTime;
             if (timePassed > 100) {
                 shootingTime = new Date().getTime();
+                shootingList.push({
+                    x: rocket_x,
+                    shootingTime: shootingTime
+                }
+                    );
+                    console.log(shootingList);
             }
 
         }
-        
+
         if (k == 's') {
             let timePassed = new Date().getTime() - shootingMissileTime;
+            lastMissile_x = rocket_x;
             if (timePassed > 2000) {
                 shootingMissileTime = new Date().getTime();
                 AUDIO_MISSILESHOOT.play();
+                if (collectedMissiles > 0) {
+                    collectedMissiles --;
+                }
+ 
             }
 
         }
