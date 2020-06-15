@@ -4,13 +4,45 @@ body {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    background-image: url("./img/horizon.jpg");
+    font-family: 'MuseoModerno', cursive;
 }
 
 .canvas {
-    border: 8px solid rgba(255,255,255,0.4);
+    border: 8px solid rgba(255, 255, 255, 0.4);
     border-radius: 8px;
 }
 
 .title {
     color: white;
+    display: flex;
+}
+
+.title h3 {
+    padding: 24px;
+}
+
+.menu {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu a {
+    font-size: 24px;
+    text-decoration: none;
+    transition: all 225ms ease-in-out;
+    color: white;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    margin-bottom: 32px;
+    min-width: 200px;
+    text-align: center;
+}
+
+.menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 225ms ease-in-out;
 }
