@@ -21,8 +21,11 @@ let collectedMissiles = [50];
 let lastMissile_x = 0;
 let enemyShootingList = [];
 let shot_missile_y = 0;
-let rocket_destroyed = false;
+let currentMissileImage = 'img/rocket.png';
+let health1Images = ['hp1.1.png', 'hp1.2.png', 'hp1.3.png', 'hp1.4.png', 'hp1.5.png', 'hp1.4.png', 'hp1.3.png','hp1.2.png']
+let health2Images = ['hp2.1.png', 'hp2.2.png', 'hp2.3.png', 'hp2.4.png', 'hp2.5.png', 'hp2.4.png', 'hp2.3.png','hp2.2.png']
 
+// ----------- Constants -------------
 let AUDIO_HEALTH = new Audio('audio/health.mp3');
 let AUDIO_MISSILELOAD = new Audio('audio/missile_load.mp3');
 let AUDIO_DAMAGE1 = new Audio('audio/damage1.mp3');
@@ -42,6 +45,7 @@ function init() {
     checkForCollision();
     spawnObjects();
     enemyRandomShot();
+    animateItems();
 }
 function calculateasteroidOffset() {
     setInterval(function () {
@@ -93,7 +97,7 @@ function checkForCollision() {
                 } else if (rocket_energy <= 0) {
                     CurrentRocketImage = 'img/destroyed.png';
                     setTimeout(function () {
-                        CurrentRocketImage.splice(i, 1);
+                        endgame();
                     }, 300);
                 }
                 enemies.splice(i, 1);
@@ -251,6 +255,7 @@ function spawnObjects() {
             let health = {
                 x: 720 * Math.random(),
                 y: 300 + (100 * Math.random()),
+                imageIndex: 0
             };
             placedHealth.push(health);
         }
@@ -261,6 +266,7 @@ function spawnObjects() {
             let health2 = {
                 x: 720 * Math.random(),
                 y: 300 + (100 * Math.random()),
+                imageIndex: 0
             };
             placedHealth2.push(health2);
         }
@@ -332,18 +338,40 @@ function updateRocket() {
 }
 
 
+function animateItems() {
+    setInterval(function(){ 
+        if (currentMissileImage == 'img/rocket.png') {
+            currentMissileImage = 'img/rocketblink.png'
+        } else {
+            currentMissileImage = 'img/rocket.png'
+            console.log(currentMissileImage)
+        }
+        
+        for (i = 0; i < placedHealth.length; i = i + 1) {
+            let health = placedHealth[i];
+            health.imageIndex = (health.imageIndex + 1) % health1Images.length;
+        }
+        for (i = 0; i < placedHealth2.length; i = i + 1) {
+            let health2 = placedHealth2[i];
+            health2.imageIndex = (health2.imageIndex + 1) % health2Images.length;
+        }
+    }, 200);
+
+}
+
 function drawItems() {
     for (i = 0; i < placedMissiles.length; i = i + 1) {
         let missile = placedMissiles[i];
-        drawBackgroundObject('img/rocket.png', missile.x, missile.y, 0.5);
+        drawBackgroundObject(currentMissileImage, missile.x, missile.y, 0.5);
+    
     }
     for (i = 0; i < placedHealth.length; i = i + 1) {
         let health = placedHealth[i];
-        drawBackgroundObject('img/hp1.1.png', health.x, health.y, 0.2);
+        drawBackgroundObject('img/' + health1Images[health.imageIndex], health.x, health.y, 0.2);
     }
     for (i = 0; i < placedHealth2.length; i = i + 1) {
         let health2 = placedHealth2[i];
-        drawBackgroundObject('img/hp2.1.png', health2.x, health2.y, 0.2);
+        drawBackgroundObject('img/' + health2Images[health2.imageIndex], health2.x, health2.y, 0.2);
     }
 }
 
@@ -417,6 +445,10 @@ function createEnemies(type, position_x, position_y, scale, hp) {
         "scale": scale,
         "hp": hp,
     };
+}
+
+function endgame() {
+    //canvas.style.display = 'none';
 }
 
 
