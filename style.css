@@ -8,6 +8,10 @@ body {
     font-family: 'MuseoModerno', cursive;
 }
 
+.overall_div {
+    display: flex;
+}
+
 .canvas {
     border: 8px solid rgba(255, 255, 255, 0.4);
     border-radius: 8px;
@@ -16,6 +20,8 @@ body {
 .title {
     color: white;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .title h3 {
@@ -45,4 +51,94 @@ body {
 .menu a:hover {
     background-color: rgba(255, 255, 255, 0.1);
     transition: all 225ms ease-in-out;
+}
+
+.overall_center {
+    width: 400px;
+    height: 500px;
+    position: relative;
+}
+
+.highscore {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.highscore p {
+    font-size: 24px;
+    text-decoration: none;
+    transition: all 225ms ease-in-out;
+    color: white;
+    padding: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    min-width: 200px;
+    text-align: center;
+}
+
+.remove-highscore {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.remove-highscore a {
+    font-size: 24px;
+    text-decoration: none;
+    transition: all 225ms ease-in-out;
+    color: white;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    padding: 8px;
+    min-width: 200px;
+    text-align: center;
+}
+
+.remove-highscore a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 225ms ease-in-out;
+}
+
+
+.left_div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    transition: all 225ms ease;
+    z-index: 1;
+}
+
+.right_div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    transition: all 225ms ease;
+    opacity: 0;
+    
+}
+
+.d-none {
+    display: none;
+}
+
+.menu-blend {
+    transform: translateX(-200px);
+}
+
+.highscore-blend {
+    transform: translateX(200px);
+    opacity: 1;
+}
+
+.exit-game {
+    position: absolute;
+    bottom: 8px;
+    right: 24px;
 }

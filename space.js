@@ -17,13 +17,15 @@ let shootingMissileTime = 0;
 let placedMissiles = [];
 let placedHealth = [];
 let placedHealth2 = [];
-let collectedMissiles = [50];
+let collectedMissiles = [0];
 let lastMissile_x = 0;
 let enemyShootingList = [];
 let shot_missile_y = 0;
 let currentMissileImage = 'img/rocket.png';
-let health1Images = ['hp1.1.png', 'hp1.2.png', 'hp1.3.png', 'hp1.4.png', 'hp1.5.png', 'hp1.4.png', 'hp1.3.png','hp1.2.png']
-let health2Images = ['hp2.1.png', 'hp2.2.png', 'hp2.3.png', 'hp2.4.png', 'hp2.5.png', 'hp2.4.png', 'hp2.3.png','hp2.2.png']
+let health1Images = ['hp1.1.png', 'hp1.2.png', 'hp1.3.png', 'hp1.4.png', 'hp1.5.png', 'hp1.4.png', 'hp1.3.png', 'hp1.2.png']
+let health2Images = ['hp2.1.png', 'hp2.2.png', 'hp2.3.png', 'hp2.4.png', 'hp2.5.png', 'hp2.4.png', 'hp2.3.png', 'hp2.2.png']
+let defeatedEnemies = [0];
+let highScores = [];
 
 // ----------- Constants -------------
 let AUDIO_HEALTH = new Audio('audio/health.mp3');
@@ -90,16 +92,22 @@ function checkForCollision() {
             if ((enemie.position_x - 40) < rocket_x && (enemie.position_x + 40) > rocket_x && (enemie.position_y - 50) < rocket_y && (enemie.position_y + 5) > rocket_y) {
                 if (rocket_energy > 0) {
                     rocket_energy -= 20;
+                    if(rocket_energy < 0) {
+                        rocket_energy = 0;
+                    }
                     CurrentRocketImage = 'img/rocket_normallight.png'
                     setTimeout(function () {
                         enemie.img = 'img/rocket_normal.png'
                     }, 100);
+                    
                 } else if (rocket_energy <= 0) {
                     CurrentRocketImage = 'img/destroyed.png';
+                    rocket_energy = 0;
                     setTimeout(function () {
                         endgame();
                     }, 300);
                 }
+                console.log(rocket_energy);
                 enemies.splice(i, 1);
                 AUDIO_DAMAGE3.play();
 
@@ -113,12 +121,13 @@ function checkForCollision() {
                     rocket_energy -= 5;
                     CurrentRocketImage = 'img/rocket_normallight.png'
                     setTimeout(function () {
-                        CurrentRocketImage  = 'img/rocket_normal.png'
+                        CurrentRocketImage = 'img/rocket_normal.png'
                     }, 100);
                 } else if (rocket_energy <= 0) {
                     CurrentRocketImage = 'img/destroyed.png';
+                        rocket_energy = 0;
                     setTimeout(function () {
-                        CurrentRocketImage.splice(i, 1);
+                        endgame();
                     }, 300);
                 }
                 enemyShootingList.splice(i, 1);
@@ -142,6 +151,7 @@ function checkForCollision() {
                         setTimeout(function () {
                             enemies.splice(i, 1);
                         }, 250);
+                        defeatedEnemies++;
                     } else {
                         if (enemie.img == 'img/alien_level2green.png') {
                             enemie.img = 'img/alien_level2greenlight.png';
@@ -178,6 +188,7 @@ function checkForCollision() {
                     setTimeout(function () {
                         enemies.splice(i, 1);
                     }, 250);
+                    defeatedEnemies++;
                 } else {
                     if (enemie.img == 'img/alien_level1red.png') {
                         enemie.img = 'img/alien_level1redlight.png';
@@ -318,8 +329,8 @@ function drawEnemyShots() {
     for (let i = 0; i < enemyShootingList.length; i = i + 1) {
         let currentShot = enemyShootingList[i];
         currentShot.position_y += 4;
-        if (currentShot.position_y < 480) {
-            shootingList.splice(i, 1);
+        if (currentShot.position_y > 480) {
+            enemyShootingList.splice(i, 1);
         }
         let base_image = new Image();
         base_image.src = 'img/enemyshot.png';
@@ -339,14 +350,14 @@ function updateRocket() {
 
 
 function animateItems() {
-    setInterval(function(){ 
+    setInterval(function () {
         if (currentMissileImage == 'img/rocket.png') {
             currentMissileImage = 'img/rocketblink.png'
         } else {
             currentMissileImage = 'img/rocket.png'
             console.log(currentMissileImage)
         }
-        
+
         for (i = 0; i < placedHealth.length; i = i + 1) {
             let health = placedHealth[i];
             health.imageIndex = (health.imageIndex + 1) % health1Images.length;
@@ -363,7 +374,7 @@ function drawItems() {
     for (i = 0; i < placedMissiles.length; i = i + 1) {
         let missile = placedMissiles[i];
         drawBackgroundObject(currentMissileImage, missile.x, missile.y, 0.5);
-    
+
     }
     for (i = 0; i < placedHealth.length; i = i + 1) {
         let health = placedHealth[i];
@@ -426,6 +437,10 @@ function drawInfo() {
     ctx.font = '24px calibry'
     ctx.fillStyle = 'white';
     ctx.fillText('x' + collectedMissiles, 240, 473)
+
+    ctx.font = '24px calibry'
+    ctx.fillStyle = 'white';
+    ctx.fillText('Kills: ' + defeatedEnemies, 290, 473)
 }
 
 
@@ -433,6 +448,12 @@ function drawEnemies() {
     for (i = 0; i < enemies.length; i = i + 1) {
         let enemie = enemies[i]
         drawBackgroundObject(enemie.img, enemie.position_x, enemie.position_y, enemie.scale, 1);
+        if (enemie.x < 0) {
+            enemies.splice(i, 1);
+        }
+        if (enemies.length == 0) {
+            endgame();
+        }
     }
 
 }
@@ -448,7 +469,8 @@ function createEnemies(type, position_x, position_y, scale, hp) {
 }
 
 function endgame() {
-    //canvas.style.display = 'none';
+    canvas.style.display = 'none';
+
 }
 
 
@@ -503,6 +525,10 @@ function drawBackgroundObject(src, object_x, object_y, scale, opacity) {
         ctx.drawImage(base_image, object_x, object_y, base_image.width * scale, base_image.height * scale);
     }
     ctx.globalAlpha = 1;
+}
+
+function save_highscore() {
+    
 }
 
 function listenForKeys() {

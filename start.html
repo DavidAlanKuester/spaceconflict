@@ -3,22 +3,54 @@
 <head>
     <title>Space Conflict</title>
     <link rel="stylesheet" href="style.css">
-    <script src="space.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="start.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="./img/rocket_normal.png">
 </head>
 
 <body>
-    <div>
-        <div class="title">
-            <h1>Space Conflict</h1>
-        </div>
+    <div class="overall_div">
+        <div class="overall_center">
+            
+        <div id="main-menu" class="left_div">
+            <div class="title">
+                <h1>Space Conflict</h1>
+            </div>
 
-        <div class="menu">
-            <a href="#">Start Game</a>
-            <a href="#">Impressum</a>
-            <a href="#">Datenschutz</a>
-            <a href="#">Highscore</a>
+            <div class="menu">
+                <a href="index.html">Start Game</a>
+                <a href="https://developerakademie.com/impressum.html">Imprint</a>
+                <a href="https://developerakademie.com/datenschutz.html">Data protection</a>
+                <a onclick="showHighscore()" href="#">Highscore</a>
+            </div>
+
         </div>
+        <div id="highscore" class="right_div">
+            <div class="title">
+                <h1>Highscore</h1>
+            </div>
+            <div class="highscore">
+                <div>
+                    <p id="name1">Name1</p>
+                    <p id="name1">Name2</p>
+                    <p id="name1">Name3</p>
+                    <p id="name1">Name4</p>
+                </div>
+                <div>
+                    <p id="score1">000</p>
+                    <p id="score2">000</p>
+                    <p id="score3">000</p>
+                    <p id="score4">000</p>
+                </div>
+
+            </div>
+            <div class="remove-highscore">
+                <a onclick="removeHighscore()" href="#">Hide Highscore</a>
+            </div>
+        </div>
+    </div>
 
     </div>
 
