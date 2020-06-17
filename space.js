@@ -92,15 +92,17 @@ function checkForCollision() {
             if ((enemie.position_x - 40) < rocket_x && (enemie.position_x + 40) > rocket_x && (enemie.position_y - 50) < rocket_y && (enemie.position_y + 5) > rocket_y) {
                 if (rocket_energy > 0) {
                     rocket_energy -= 20;
-                    if(rocket_energy < 0) {
+                    if (rocket_energy < 0) {
                         rocket_energy = 0;
                     }
                     CurrentRocketImage = 'img/rocket_normallight.png'
                     setTimeout(function () {
                         enemie.img = 'img/rocket_normal.png'
                     }, 100);
-                    
-                } else if (rocket_energy <= 0) {
+
+                } 
+                
+                if (rocket_energy <= 0) {
                     CurrentRocketImage = 'img/destroyed.png';
                     rocket_energy = 0;
                     setTimeout(function () {
@@ -123,9 +125,11 @@ function checkForCollision() {
                     setTimeout(function () {
                         CurrentRocketImage = 'img/rocket_normal.png'
                     }, 100);
-                } else if (rocket_energy <= 0) {
+                } 
+                
+                if (rocket_energy <= 0) {
                     CurrentRocketImage = 'img/destroyed.png';
-                        rocket_energy = 0;
+                    rocket_energy = 0;
                     setTimeout(function () {
                         endgame();
                     }, 300);
@@ -322,7 +326,11 @@ function draw() {
     drawShootMissile();
     drawEnemyShots();
     requestAnimationFrame(draw);
+    loadHighscores();
+}
 
+function loadHighscores() {
+    highScores = JSON.parse(localStorage.getItem('highScores'));
 }
 
 function drawEnemyShots() {
@@ -470,6 +478,14 @@ function createEnemies(type, position_x, position_y, scale, hp) {
 
 function endgame() {
     canvas.style.display = 'none';
+    document.getElementById('gameover_menu').classList.remove('d-none');
+    document.getElementById('exit').classList.add('d-none');
+    AUDIO_DAMAGE1.volume = 0;
+    AUDIO_DAMAGE2.volume = 0;
+    AUDIO_DAMAGE3.volume = 0;
+    AUDIO_MISSILESHOOT.volume = 0;
+    AUDIO_HEALTH.volume = 0;
+    AUDIO_MISSILELOAD.volume = 0;
 
 }
 
@@ -528,7 +544,15 @@ function drawBackgroundObject(src, object_x, object_y, scale, opacity) {
 }
 
 function save_highscore() {
-    
+    let newScore = {
+        'name': document.getElementById('player-name').value,
+        'point': defeatedEnemies,
+    };
+
+    highScores.push(newScore)
+
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+    window.location.href = 'start.html';
 }
 
 function listenForKeys() {

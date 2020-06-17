@@ -7,18 +7,19 @@
     <link
         href="https://fonts.googleapis.com/css2?family=MuseoModerno:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
-        <link rel="shortcut icon" type="image/x-icon" href="./img/rocket_normal.png">
+    <link rel="shortcut icon" type="image/x-icon" href="./img/rocket_normal.png">
 </head>
 
 <body onload="init()">
     <div class="title">
         <h1>Space Conflict</h1>
     </div>
-<div class="gameover menu">
-    <h2>Game Over</h2>
-    <input placeholder="Please enter your name"> 
-    <a onclick="save_highscore()">Back to Menu</a>
-</div>
+
+    <div id="gameover_menu" class="gameover-menu d-none">
+        <h2>Game Over</h2>
+        <input maxlength="10" id="player-name" class="player-name" placeholder="Please enter your name">
+        <a onclick="save_highscore()">Back to Menu</a>
+    </div>
 
     <canvas class="canvas" id="canvas" width="720" height="480"></canvas>
 
@@ -27,7 +28,7 @@
         <h3> Space = Shoot </h3>
         <h3> S = Missile </h3>
     </div>
-    <div class="menu exit-game">
+    <div id="exit" class="menu exit-game">
         <a href="start.html">Exit Game</a>
     </div>
 
