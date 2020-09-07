@@ -11,25 +11,25 @@ function removeHighscore() {
 
 
 function loadHighscores() {
-    highScores = JSON.parse(localStorage.getItem('highScores'));
+    highScores = JSON.parse(localStorage.getItem('highScores')) || [];
     highScores.sort(function(score1, score2) {
         return score2.point - score1.point;
     });
     console.log('Loaded highScores', highScores);
-    if (highScores[0].name) {
+    if (highScores[0] && highScores[0].name) {
         document.getElementById('name1').innerHTML = highScores[0].name;
         document.getElementById('score1').innerHTML = highScores[0].point;
     }
 
-    if (highScores[1].name) {
+    if (highScores[1] && highScores[1].name) {
         document.getElementById('name2').innerHTML = highScores[1].name;
         document.getElementById('score2').innerHTML = highScores[1].point;
     }
-    if (highScores[2].name) {
+    if (highScores[2] && highScores[2].name) {
         document.getElementById('name3').innerHTML = highScores[2].name;
         document.getElementById('score3').innerHTML = highScores[2].point;
     }
-    if (highScores[3].name) {
+    if (highScores[3] && highScores[3].name) {
         document.getElementById('name4').innerHTML = highScores[3].name;
         document.getElementById('score4').innerHTML = highScores[3].point;
     }

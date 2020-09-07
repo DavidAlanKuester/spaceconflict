@@ -187,3 +187,30 @@ body {
     padding: 32px;
     margin-bottom: 32px;
 }
+
+.mobile-overlay {
+    display: none;
+}
+
+@media(max-width: 1000px) {
+    .mobile-overlay {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 80px;
+        text-align: center;
+        z-index: 10;
+    }
+
+    canvas {
+        filter: blur(3px);
+    }
+}

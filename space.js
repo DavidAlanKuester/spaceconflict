@@ -330,7 +330,7 @@ function draw() {
 }
 
 function loadHighscores() {
-    highScores = JSON.parse(localStorage.getItem('highScores'));
+    highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 }
 
 function drawEnemyShots() {
